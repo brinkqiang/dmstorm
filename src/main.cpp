@@ -70,7 +70,7 @@ int main()
 
     if (!ORM::init())
     {
-        return -1;
+        ;
     }
 
     INSERT_QUERY();

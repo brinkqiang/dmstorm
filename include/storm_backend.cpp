@@ -9,7 +9,9 @@ namespace ORM{
 Query::Query() :
 	n_limit(0),
 	query_type(0),
-	currupted(false){
+	currupted(false),
+    mysql(NULL)
+{
 }
 Query::~Query(){
 }
@@ -89,7 +91,7 @@ vector<string> Query::fetch_fields(MYSQL_RES *result){
 vector<MYSQL_ROW> Query::fetch_rows(MYSQL_RES *result){
 	vector<MYSQL_ROW> rows;
 	int n_row =
-		mysql_num_rows( result );
+		(int)mysql_num_rows( result );
 	
 	for(int i=0;i<n_row;i++) {
 		MYSQL_ROW row = 
@@ -155,7 +157,6 @@ Query *Query::find_single_record(){
 	for(int i=0;i<fields.size();i++)
 		obj->set_with_no_dirt( fields[i], row[i] );
 
-	/* 나중에 이 레코드를 식별하기 위해 */
 	obj->where("id", obj->get("id") );
 	obj->set_query_type(
 		QueryType::eUPDATE );
@@ -186,7 +187,6 @@ vector<Query*> Query::find_records(){
 		for(int j=0;j<fields.size();j++)
 			obj->set_with_no_dirt( fields[j], rows[i][j] );
 
-		/* 나중에 이 레코드를 식별하기 위해 */
 		obj->where("id", obj->get("id") );
 		obj->set_query_type(
 			QueryType::eUPDATE );
