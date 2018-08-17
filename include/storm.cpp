@@ -2,8 +2,7 @@
 
 #include <memory>
 #include <stdarg.h>
-
-using namespace std;
+#include <stdlib.h>
 
 namespace ORM{
 
@@ -24,7 +23,7 @@ void quit(){
 	quitPool();
 }
 
-string get_last_error(){
+std::string get_last_error(){
 	MYSQL *mysql = get_db();
 
 	return mysql_error( mysql );
@@ -36,7 +35,7 @@ int raw_query(const std::string &query){
 int raw_query(const std::string format, ...){
 	va_list va;
 	std::unique_ptr<char[]> query;
-	int size = format.size() * 2; /* guessed size */
+	int size = (int)(format.size() * 2); /* guessed size */
 
 	while( true ){
 		query.reset( new char [size] );
@@ -57,14 +56,14 @@ int raw_query(const std::string format, ...){
 		get_db(), query.get() );
 }
 
-string escape(const string &str){
+std::string escape(const std::string &from){
 	static MYSQL *mysql = mysql_init( NULL );
-	char escaped[1024];
-
+    std::string to;
+    to.resize(from.size() * 2 + 1);
 	mysql_real_escape_string(
-		mysql, escaped, str.c_str(), str.length() );
+		mysql, &*to.begin(), from.c_str(), (unsigned long)from.length() );
 
-	return escaped;
+	return to;
 }
 
 }
