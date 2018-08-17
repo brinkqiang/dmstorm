@@ -1,55 +1,82 @@
-/**
- * @file test.cpp
- * @brief
- * @author arthur fatih@qq.com
- * @version 1.0.0
- * @date 2017-11-23
- */
-
 
 #include <iostream>
-#include "gdb.hpp"
-#include "person.dm.h"
+
+//#include "person.dm.h"
+#include "storm.h"
+
+void INSERT_QUERY()
+{
+    auto query =
+        ORM::from("test")->create();
+
+    query->set("id", "pjc");
+    query->set("nick", "anz");
+
+    (*query)["another"] = "method";
+
+    query->save();
+}
+
+void UPDATE_QUERY()
+{
+    auto query =
+        ORM::from("test")
+        ->where("id", "pjc0247")
+        ->find_one();
+
+    (*query)["nickname"] = "anz";
+
+    query->save();
+}
+void SELECT_QUERY()
+{
+    auto query = ORM::from("test");
+
+    auto result = query
+        ->where("id", "foo")
+        ->where("nick", "bar")
+        ->select("level")
+        ->find_one();
+    std::cout << (*result)["level"];
+
+    auto results = query
+        ->where_raw("nick=foo")
+        ->limit(5)
+        ->find_many();
+    for (auto result : results)
+        std::cout << (*result)["level"] << std::endl;
+}
+
+void DELETE_QUERY()
+{
+    auto query =
+        ORM::from("test")
+        ->where("id", "pjc0247")
+        ->find_one();
+    query->remove();
+
+    auto query2 =
+        ORM::from("test")
+        ->where("level", "1");
+    query2->remove();
+}
 
 int main()
 {
-    GDb oGDB("127.0.0.1", 3306, "root", "000000");
-    oGDB.init("");
+    ORM::configure("host", "localhost");
+    ORM::configure("user", "pjc");
+    ORM::configure("password", "1234");
+    ORM::configure("db", "dbname");
 
-    DBQuery oQuery;
-
-    CDMPB_tb_Person oPerson(oGDB, oQuery);
-    oPerson.CreateDB();
-    oPerson.CreateTable();
-
-    db::tb_Person data;
-    data.set_id(::db::MessageId::MSGID_tb_Person);
-    data.set_number("13900112233");
-    data.set_email("person@163.com");
-    data.set_phonetype(::db::PhoneType::WORK);
-
-    oPerson.Insert(data);
-
+    if (!ORM::init())
     {
-        std::vector<db::tb_Person> datas;
-        oPerson.Select(data, datas);
+        return -1;
     }
 
-
-    data.set_number("123456789");
-
-    oPerson.Update(data);
-
-    {
-        std::vector<db::tb_Person> datas;
-        oPerson.Select(data, datas);
-    }
-
-    oPerson.Del(data);
-
-    {
-        std::vector<db::tb_Person> datas;
-        oPerson.Select(data, datas);
-    }
+    INSERT_QUERY();
+    UPDATE_QUERY();
+    SELECT_QUERY();
+    DELETE_QUERY();
+    ORM::quit();
     return 0;
 }

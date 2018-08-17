@@ -27,7 +27,7 @@ string &get_config(
 bool initConfig(){
 	configure_with_no_override("host", "127.0.0.1");
 	configure_with_no_override("port", "3306");
-	configure_with_no_override("pool_size", "10");
+	configure_with_no_override("pool_size", "2");
 	configure_with_no_override("log_query", "false");
 
 	return true;

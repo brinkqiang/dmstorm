@@ -53,6 +53,8 @@ FILE(GLOB DMDBTEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/person.pb.cc)
 

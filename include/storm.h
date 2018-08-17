@@ -1,7 +1,11 @@
 #ifndef _STORM_H
 #define _STORM_H
 
-#include <mysql.h>
+#ifdef WIN32
+#include "mysql.h"
+#else
+#include "mysql/mysql.h"
+#endif
 
 #include <string>
 #include <vector>
