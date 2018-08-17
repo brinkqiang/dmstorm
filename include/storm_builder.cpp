@@ -1,4 +1,5 @@
 #include "storm.h"
+#include <assert.h>
 
 using namespace std;
 
@@ -165,7 +166,11 @@ string Query::build(){
 		return build_delete();
 	case eINSERT:
 		return build_insert();
+    default:
+        assert(0);
+        return "";
 	}
 }
+
 
 }
